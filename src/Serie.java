@@ -16,6 +16,18 @@ public class Serie {
     private int episodiosAssistidos;
 
     public Serie(String titulo, int numeroTemporadas, int totalEpisodios, String genero, String classificacaoIndicativa) {
+        if (titulo == null || titulo.isBlank()) {
+            throw new IllegalArgumentException("Título não pode ser vazio.");
+        }
+        if (numeroTemporadas <= 0 || totalEpisodios <= 0) {
+            throw new IllegalArgumentException("Temporadas e episódios devem ser maiores que zero.");
+        }
+        if (genero == null || genero.isBlank()) {
+            throw new IllegalArgumentException("Gênero não pode ser vazio.");
+        }
+        if (classificacaoIndicativa == null || classificacaoIndicativa.isBlank()) {
+            throw new IllegalArgumentException("Classificação indicativa não pode ser vazia.");
+        }
         this.titulo = titulo;
         this.numeroTemporadas = numeroTemporadas;
         this.totalEpisodios = totalEpisodios;

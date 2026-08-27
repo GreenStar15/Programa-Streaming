@@ -13,10 +13,30 @@ public class Assinatura {
     private String qualidadeMaxima; // ex: "SD", "HD", "4K"
 
     public Assinatura(String tipoPlano, double precoMensal, boolean permiteDownload, String qualidadeMaxima) {
+        if (tipoPlano == null || tipoPlano.isBlank()) {
+            throw new IllegalArgumentException("Tipo de plano não pode ser vazio.");
+        }
+        if (precoMensal < 0) {
+            throw new IllegalArgumentException("Preço mensal não pode ser negativo.");
+        }
+        if (qualidadeMaxima == null || qualidadeMaxima.isBlank()) {
+            throw new IllegalArgumentException("Qualidade máxima não pode ser vazia.");
+        }
         this.tipoPlano = tipoPlano;
         this.precoMensal = precoMensal;
         this.permiteDownload = permiteDownload;
         this.qualidadeMaxima = qualidadeMaxima;
+    }
+
+    // Método de domínio, no lugar de um setQualidadeMaxima(String) genérico
+    public void fazerUpgradeDeQualidade(String novaQualidade) {
+        java.util.List<String> validas = java.util.List.of("SD", "HD", "4K");
+        if (!validas.contains(novaQualidade)) {
+            System.out.println("Qualidade inválida.");
+            return;
+        }
+        this.qualidadeMaxima = novaQualidade;
+        System.out.println("Qualidade máxima atualizada para " + novaQualidade + ".");
     }
 
     // Comportamento real do objeto: verifica se o plano cobre um benefício pedido

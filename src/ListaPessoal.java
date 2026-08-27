@@ -17,6 +17,9 @@ public class ListaPessoal {
     private List<Serie> seriesSalvas;
 
     public ListaPessoal(String nomeDoUsuario) {
+        if (nomeDoUsuario == null || nomeDoUsuario.isBlank()) {
+            throw new IllegalArgumentException("Nome do usuário não pode ser vazio.");
+        }
         this.nomeDoUsuario = nomeDoUsuario;
         this.filmesSalvos = new ArrayList<>();
         this.seriesSalvas = new ArrayList<>();

@@ -12,6 +12,18 @@ public class Filme {
     private boolean disponivel;
 
     public Filme(String titulo, int duracaoMinutos, String genero, String classificacaoIndicativa) {
+        if (titulo == null || titulo.isBlank()) {
+            throw new IllegalArgumentException("Título não pode ser vazio.");
+        }
+        if (duracaoMinutos <= 0) {
+            throw new IllegalArgumentException("Duração deve ser maior que zero.");
+        }
+        if (genero == null || genero.isBlank()) {
+            throw new IllegalArgumentException("Gênero não pode ser vazio.");
+        }
+        if (classificacaoIndicativa == null || classificacaoIndicativa.isBlank()) {
+            throw new IllegalArgumentException("Classificação indicativa não pode ser vazia.");
+        }
         this.titulo = titulo;
         this.duracaoMinutos = duracaoMinutos;
         this.genero = genero;
@@ -34,6 +46,11 @@ public class Filme {
 
     public void retirarDoCatalogo() {
         this.disponivel = false;
+    }
+
+    // Método de domínio, no lugar de um setDisponivel(boolean) genérico
+    public void reincluirNoCatalogo() {
+        this.disponivel = true;
     }
 
     public String getTitulo() {

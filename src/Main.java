@@ -84,5 +84,25 @@ public class Main {
 
         System.out.println("\nAna tem " + listaAna.contarItens() + " item(ns) salvo(s).");
         System.out.println("Bruno tem " + listaBruno.contarItens() + " item(ns) salvo(s).");
+
+        // ===== Testes de estado inválido (Atividade 8) =====
+        System.out.println("\n===== Testes de validação =====");
+
+        try {
+            Filme filmeInvalido = new Filme("", -10, "Terror", "18 anos");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Falha esperada ao criar Filme: " + e.getMessage());
+        }
+
+        try {
+            Usuario usuarioInvalido = new Usuario("Carla", "Plano Inexistente");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Falha esperada ao criar Usuario: " + e.getMessage());
+        }
+
+        // Comparando método de negócio x setter genérico
+        System.out.println("\n--- Método de negócio protegendo o objeto ---");
+        usuario1.fazerUpgradeDePlano("Plano Vip Fake"); // recusado, com aviso
+        usuario1.fazerUpgradeDePlano("Padrão");         // aceito, plano válido
     }
 }

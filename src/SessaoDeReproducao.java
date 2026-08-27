@@ -21,6 +21,10 @@ public class SessaoDeReproducao {
 
     // Comportamento real do objeto: avança o tempo assistido, se não estiver pausado
     public void avancarTempo(int minutos) {
+        if (minutos <= 0) {
+            System.out.println("Tempo a avançar deve ser positivo.");
+            return;
+        }
         if (pausado) {
             System.out.println("Sessão pausada. Não é possível avançar o tempo.");
             return;
