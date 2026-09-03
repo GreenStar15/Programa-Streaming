@@ -74,12 +74,12 @@ public class Main {
         ListaPessoal listaBruno = new ListaPessoal("Bruno");
 
         System.out.println("\n===== Listas pessoais =====");
-        listaAna.adicionarFilme(filme1);
-        listaAna.adicionarSerie(serie1);
+        listaAna.adicionarItem(filme1);
+        listaAna.adicionarItem(serie1);
         listaAna.exibirLista();
 
         System.out.println();
-        listaBruno.adicionarSerie(serie2);
+        listaBruno.adicionarItem(serie2);
         listaBruno.exibirLista();
 
         System.out.println("\nAna tem " + listaAna.contarItens() + " item(ns) salvo(s).");
@@ -104,5 +104,25 @@ public class Main {
         System.out.println("\n--- Método de negócio protegendo o objeto ---");
         usuario1.fazerUpgradeDePlano("Plano Vip Fake"); // recusado, com aviso
         usuario1.fazerUpgradeDePlano("Padrão");         // aceito, plano válido
+
+        // ===== Polimorfismo (Atividade 9) =====
+        // Referências do tipo da SUPERCLASSE (Midia) apontando para
+        // objetos de subclasses diferentes (Filme e Serie).
+        System.out.println("\n===== Polimorfismo =====");
+        Midia midiaA = filme1;
+        Midia midiaB = serie1;
+
+        // Mesma chamada de método (exibirFicha), comportamento diferente,
+        // dependendo do tipo REAL do objeto por trás da referência Midia.
+        midiaA.exibirFicha();
+        System.out.println();
+        midiaB.exibirFicha();
+
+        // ===== Sobrecarga (Atividade 5) =====
+        // Mesmo nome de método, exibirResumo(), duas assinaturas diferentes.
+        System.out.println("\n===== Sobrecarga: exibirResumo() =====");
+        filme1.exibirResumo();          // versão sem parâmetros: resumo curto
+        System.out.println();
+        filme1.exibirResumo(true);      // versão com parâmetro: ficha completa
     }
 }

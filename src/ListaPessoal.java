@@ -3,66 +3,54 @@ import java.util.List;
 
 /**
  * Representa a lista pessoal (favoritos / "assistir mais tarde") de um usuário.
- * Responsabilidade: guardar quais filmes e séries o usuário salvou,
+ * Responsabilidade: guardar quais mídias (filmes ou séries) o usuário salvou,
  * separado do histórico de consumo (que fica em Usuario/SessaoDeReproducao).
  *
- * Guardamos filmes e séries em duas listas separadas, e não em uma lista
- * única, porque Filme e Serie não compartilham uma superclasse — o grupo
- * decidiu não usar herança/interfaces nesta fase do projeto.
+ * Decisão de modelagem (Etapa 3): na Etapa 2, guardávamos filmes e séries em
+ * duas listas separadas (List<Filme> e List<Serie>), porque as duas classes
+ * não tinham nenhuma superclasse em comum. Agora que Filme e Serie são
+ * ambas Midia, unificamos numa única List<Midia> — isso é exatamente o
+ * tipo de duplicação que a herança existe para eliminar. Um Filme "é uma"
+ * Midia, então pode entrar na mesma lista sem nenhum truque.
  */
 public class ListaPessoal {
 
     private String nomeDoUsuario;
-    private List<Filme> filmesSalvos;
-    private List<Serie> seriesSalvas;
+    private List<Midia> itensSalvos;
 
     public ListaPessoal(String nomeDoUsuario) {
         if (nomeDoUsuario == null || nomeDoUsuario.isBlank()) {
             throw new IllegalArgumentException("Nome do usuário não pode ser vazio.");
         }
         this.nomeDoUsuario = nomeDoUsuario;
-        this.filmesSalvos = new ArrayList<>();
-        this.seriesSalvas = new ArrayList<>();
+        this.itensSalvos = new ArrayList<>();
     }
 
-    // Comportamento real do objeto: adiciona um filme, evitando duplicado
-    public void adicionarFilme(Filme filme) {
-        if (filmesSalvos.contains(filme)) {
-            System.out.println(filme.getTitulo() + " já está na lista de " + nomeDoUsuario + ".");
+    // Um único método, graças ao polimorfismo: aceita tanto um Filme
+    // quanto uma Serie, porque os dois "são" Midia.
+    public void adicionarItem(Midia item) {
+        if (itensSalvos.contains(item)) {
+            System.out.println(item.getTitulo() + " já está na lista de " + nomeDoUsuario + ".");
             return;
         }
-        filmesSalvos.add(filme);
-        System.out.println(filme.getTitulo() + " adicionado à lista de " + nomeDoUsuario + ".");
+        itensSalvos.add(item);
+        System.out.println(item.getTitulo() + " adicionado à lista de " + nomeDoUsuario + ".");
     }
 
-    public void adicionarSerie(Serie serie) {
-        if (seriesSalvas.contains(serie)) {
-            System.out.println(serie.getTitulo() + " já está na lista de " + nomeDoUsuario + ".");
-            return;
-        }
-        seriesSalvas.add(serie);
-        System.out.println(serie.getTitulo() + " adicionada à lista de " + nomeDoUsuario + ".");
-    }
-
-    public void removerFilme(Filme filme) {
-        if (filmesSalvos.remove(filme)) {
-            System.out.println(filme.getTitulo() + " removido da lista de " + nomeDoUsuario + ".");
+    public void removerItem(Midia item) {
+        if (itensSalvos.remove(item)) {
+            System.out.println(item.getTitulo() + " removido da lista de " + nomeDoUsuario + ".");
         }
     }
 
     public void exibirLista() {
-        System.out.println("Lista pessoal de " + nomeDoUsuario + ":");
-        System.out.println("  Filmes (" + filmesSalvos.size() + "):");
-        for (Filme f : filmesSalvos) {
-            System.out.println("   - " + f.getTitulo());
-        }
-        System.out.println("  Séries (" + seriesSalvas.size() + "):");
-        for (Serie s : seriesSalvas) {
-            System.out.println("   - " + s.getTitulo());
+        System.out.println("Lista pessoal de " + nomeDoUsuario + " (" + itensSalvos.size() + " item(ns)):");
+        for (Midia item : itensSalvos) {
+            item.exibirResumo(); // polimorfismo: cada item imprime seu próprio resumo
         }
     }
 
     public int contarItens() {
-        return filmesSalvos.size() + seriesSalvas.size();
+        return itensSalvos.size();
     }
 }

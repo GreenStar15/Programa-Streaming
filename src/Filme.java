@@ -1,60 +1,31 @@
 /**
  * Representa um filme disponível no catálogo de streaming (VOD).
- * Responsabilidade: guardar os dados do filme e informar se ele
- * está disponível para exibição no momento.
+ * Responsabilidade: guardar o que é específico de um filme (duração) —
+ * os dados comuns a qualquer mídia (título, gênero, classificação,
+ * disponibilidade) agora vivem na superclasse Midia.
+ *
+ * "Filme é uma Midia" faz sentido no domínio: todo filme É um tipo de
+ * mídia do catálogo, então usamos herança (extends), não composição.
  */
-public class Filme {
+public class Filme extends Midia {
 
-    private String titulo;
     private int duracaoMinutos;
-    private String genero;
-    private String classificacaoIndicativa;
-    private boolean disponivel;
 
     public Filme(String titulo, int duracaoMinutos, String genero, String classificacaoIndicativa) {
-        if (titulo == null || titulo.isBlank()) {
-            throw new IllegalArgumentException("Título não pode ser vazio.");
-        }
+        super(titulo, genero, classificacaoIndicativa); // valida e inicializa os dados comuns
         if (duracaoMinutos <= 0) {
             throw new IllegalArgumentException("Duração deve ser maior que zero.");
         }
-        if (genero == null || genero.isBlank()) {
-            throw new IllegalArgumentException("Gênero não pode ser vazio.");
-        }
-        if (classificacaoIndicativa == null || classificacaoIndicativa.isBlank()) {
-            throw new IllegalArgumentException("Classificação indicativa não pode ser vazia.");
-        }
-        this.titulo = titulo;
         this.duracaoMinutos = duracaoMinutos;
-        this.genero = genero;
-        this.classificacaoIndicativa = classificacaoIndicativa;
-        this.disponivel = true; // por padrão, todo filme cadastrado entra disponível
     }
 
-    // Comportamento real do objeto: imprime a ficha técnica do filme
+    // Sobrescrita (Atividade 8): reaproveita o comportamento comum da
+    // superclasse com super.exibirFicha(), e acrescenta o que é
+    // específico de Filme (a duração).
+    @Override
     public void exibirFicha() {
-        System.out.println("Título: " + titulo);
+        super.exibirFicha();
         System.out.println("Duração: " + duracaoMinutos + " min");
-        System.out.println("Gênero: " + genero);
-        System.out.println("Classificação: " + classificacaoIndicativa);
-        System.out.println("Disponível: " + (disponivel ? "Sim" : "Não"));
-    }
-
-    public boolean estaDisponivel() {
-        return disponivel;
-    }
-
-    public void retirarDoCatalogo() {
-        this.disponivel = false;
-    }
-
-    // Método de domínio, no lugar de um setDisponivel(boolean) genérico
-    public void reincluirNoCatalogo() {
-        this.disponivel = true;
-    }
-
-    public String getTitulo() {
-        return titulo;
     }
 
     public int getDuracaoMinutos() {

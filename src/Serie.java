@@ -1,79 +1,53 @@
 /**
  * Representa uma série disponível no catálogo de streaming (VOD).
- * Diferente de Filme, uma série tem progresso por episódio, não uma
- * duração única — por isso não reaproveitamos a classe Filme, mesmo
- * sendo parecidas: a responsabilidade (e o estado que cada uma guarda)
- * é diferente.
+ * Responsabilidade: guardar o que é específico de uma série (temporadas,
+ * episódios, progresso) — os dados comuns a qualquer mídia agora vivem
+ * na superclasse Midia.
+ *
+ * "Serie é uma Midia" faz sentido no domínio, pelo mesmo motivo de Filme.
  */
-public class Serie {
+public class Serie extends Midia {
 
-    private String titulo;
     private int numeroTemporadas;
     private int totalEpisodios;
-    private String genero;
-    private String classificacaoIndicativa;
-    private boolean disponivel;
     private int episodiosAssistidos;
 
     public Serie(String titulo, int numeroTemporadas, int totalEpisodios, String genero, String classificacaoIndicativa) {
-        if (titulo == null || titulo.isBlank()) {
-            throw new IllegalArgumentException("Título não pode ser vazio.");
-        }
+        super(titulo, genero, classificacaoIndicativa); // valida e inicializa os dados comuns
         if (numeroTemporadas <= 0 || totalEpisodios <= 0) {
             throw new IllegalArgumentException("Temporadas e episódios devem ser maiores que zero.");
         }
-        if (genero == null || genero.isBlank()) {
-            throw new IllegalArgumentException("Gênero não pode ser vazio.");
-        }
-        if (classificacaoIndicativa == null || classificacaoIndicativa.isBlank()) {
-            throw new IllegalArgumentException("Classificação indicativa não pode ser vazia.");
-        }
-        this.titulo = titulo;
         this.numeroTemporadas = numeroTemporadas;
         this.totalEpisodios = totalEpisodios;
-        this.genero = genero;
-        this.classificacaoIndicativa = classificacaoIndicativa;
-        this.disponivel = true;
         this.episodiosAssistidos = 0;
     }
 
-    // Comportamento real do objeto: imprime a ficha técnica da série
+    // Sobrescrita (Atividade 8): mesmo contrato (exibirFicha), comportamento
+    // diferente do de Filme — acrescenta temporadas/episódios em vez de duração.
+    @Override
     public void exibirFicha() {
-        System.out.println("Título: " + titulo);
+        super.exibirFicha();
         System.out.println("Temporadas: " + numeroTemporadas);
         System.out.println("Episódios: " + totalEpisodios);
-        System.out.println("Gênero: " + genero);
-        System.out.println("Classificação: " + classificacaoIndicativa);
-        System.out.println("Disponível: " + (disponivel ? "Sim" : "Não"));
     }
 
-    // Comportamento que Filme não tem: acompanhar progresso episódio a episódio
+    // Comportamento que só Serie tem: acompanhar progresso episódio a episódio.
+    // Antes da Etapa 3, Serie não tinha reincluirNoCatalogo() — agora ganha
+    // esse método de graça, herdado de Midia.
     public void assistirEpisodio() {
-        if (!disponivel) {
-            System.out.println(titulo + " não está disponível no momento.");
+        if (!estaDisponivel()) {
+            System.out.println(getTitulo() + " não está disponível no momento.");
             return;
         }
         if (episodiosAssistidos >= totalEpisodios) {
-            System.out.println("Você já assistiu a todos os episódios de " + titulo + ".");
+            System.out.println("Você já assistiu a todos os episódios de " + getTitulo() + ".");
             return;
         }
         episodiosAssistidos++;
-        System.out.println("Assistindo episódio " + episodiosAssistidos + "/" + totalEpisodios + " de " + titulo);
+        System.out.println("Assistindo episódio " + episodiosAssistidos + "/" + totalEpisodios + " de " + getTitulo());
         if (episodiosAssistidos == totalEpisodios) {
-            System.out.println(titulo + " concluída!");
+            System.out.println(getTitulo() + " concluída!");
         }
-    }
-
-    public boolean estaDisponivel() {
-        return disponivel;
-    }
-
-    public void retirarDoCatalogo() {
-        this.disponivel = false;
-    }
-
-    public String getTitulo() {
-        return titulo;
     }
 
     public int getEpisodiosAssistidos() {
