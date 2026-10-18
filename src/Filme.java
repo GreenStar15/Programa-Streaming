@@ -7,7 +7,7 @@
  * "Filme é uma Midia" faz sentido no domínio: todo filme É um tipo de
  * mídia do catálogo, então usamos herança (extends), não composição.
  */
-public class Filme extends Midia {
+public class Filme extends Midia implements Reproduzivel {
 
     private int duracaoMinutos;
 
@@ -26,6 +26,23 @@ public class Filme extends Midia {
     public void exibirFicha() {
         super.exibirFicha();
         System.out.println("Duração: " + duracaoMinutos + " min");
+    }
+
+    // Implementa o método abstrato de Midia.
+    @Override
+    public String getTipo() {
+        return "Filme";
+    }
+
+    // Implementa o contrato da interface Reproduzivel.
+    // A regra (conteúdo indisponível não toca) é lançada AQUI, no local
+    // responsável por ela; quem trata é o fluxo do programa (Main).
+    @Override
+    public void reproduzir() throws ConteudoIndisponivelException {
+        if (!estaDisponivel()) {
+            throw new ConteudoIndisponivelException(getTitulo() + " não está disponível no catálogo.");
+        }
+        System.out.println("Reproduzindo filme: " + getTitulo() + " (" + duracaoMinutos + " min)");
     }
 
     public int getDuracaoMinutos() {

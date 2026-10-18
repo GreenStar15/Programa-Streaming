@@ -1,128 +1,137 @@
 /**
- * Classe de entrada do programa.
- * Cria objetos de Filme, Usuario, Assinatura e SessaoDeReproducao
- * e demonstra, no console, estados e comportamentos diferentes entre eles.
+ * Classe de entrada do programa. Demonstra, no console, as funcionalidades
+ * das etapas 1 a 4. As exceções são TRATADAS aqui (fluxo de interação).
  */
 public class Main {
 
     public static void main(String[] args) {
 
-        // Dois objetos da mesma classe (Filme) com estados diferentes
+        // ===== Etapas 1 e 2: classes, objetos e validação =====
         Filme filme1 = new Filme("Cidade das Estrelas", 128, "Drama", "12 anos");
         Filme filme2 = new Filme("Guardiões do Amanhã", 95, "Ficção Científica", "Livre");
-        filme2.retirarDoCatalogo(); // muda o estado de filme2 para indisponível
+        filme2.retirarDoCatalogo(); // filme2 passa a ser indisponível
 
-        System.out.println("===== Catálogo =====");
+        System.out.println("===== Fichas dos filmes =====");
         filme1.exibirFicha();
         System.out.println();
         filme2.exibirFicha();
 
-        // Dois objetos da mesma classe (Usuario) com estados diferentes
         Usuario usuario1 = new Usuario("Ana", "Premium");
         Usuario usuario2 = new Usuario("Bruno", "Básico");
 
-        System.out.println("\n===== Sessão de uso =====");
-        usuario1.assistirFilme(filme1);
-        usuario2.assistirFilme(filme2); // indisponível: não altera o estado de usuario2
-
-        System.out.println();
-        usuario1.exibirResumoDeConsumo();
-        System.out.println();
-        usuario2.exibirResumoDeConsumo();
-
-        // Dois objetos da mesma classe (Assinatura) com estados diferentes
         Assinatura planoPremium = new Assinatura("Premium", 39.90, true, "4K");
         Assinatura planoBasico = new Assinatura("Básico", 19.90, false, "SD");
-
         System.out.println("\n===== Planos =====");
         planoPremium.exibirDetalhes();
         System.out.println("Permite 4K? " + planoPremium.verificarBeneficio("4K"));
-        System.out.println();
         planoBasico.exibirDetalhes();
         System.out.println("Permite download? " + planoBasico.verificarBeneficio("download"));
-        planoBasico.renovar();
 
-        // Dois objetos da mesma classe (SessaoDeReproducao) com estados diferentes
         SessaoDeReproducao sessaoAna = new SessaoDeReproducao(filme1, usuario1);
         SessaoDeReproducao sessaoBruno = new SessaoDeReproducao(filme1, usuario2);
-
         System.out.println("\n===== Sessões de reprodução =====");
         sessaoAna.avancarTempo(40);
         sessaoAna.exibirStatus();
-
         sessaoBruno.avancarTempo(10);
         sessaoBruno.pausar();
-        sessaoBruno.avancarTempo(20); // não deve avançar, pois está pausada
+        sessaoBruno.avancarTempo(20); // não avança: sessão pausada
         sessaoBruno.exibirStatus();
 
-        // Dois objetos da mesma classe (Serie) com estados diferentes
-        Serie serie1 = new Serie("Mistérios do Norte", 3, 24, "Suspense", "16 anos");
-        Serie serie2 = new Serie("Risadas em Série", 1, 10, "Comédia", "Livre");
-
-        System.out.println("\n===== Séries =====");
-        serie1.exibirFicha();
-        serie1.assistirEpisodio();
-        serie1.assistirEpisodio();
-
-        System.out.println();
-        serie2.exibirFicha();
-        serie2.retirarDoCatalogo(); // muda o estado de serie2
-        serie2.assistirEpisodio(); // deve avisar que não está disponível
-
-        // Dois objetos da mesma classe (ListaPessoal) com estados diferentes
-        ListaPessoal listaAna = new ListaPessoal("Ana");
-        ListaPessoal listaBruno = new ListaPessoal("Bruno");
-
-        System.out.println("\n===== Listas pessoais =====");
-        listaAna.adicionarItem(filme1);
-        listaAna.adicionarItem(serie1);
-        listaAna.exibirLista();
-
-        System.out.println();
-        listaBruno.adicionarItem(serie2);
-        listaBruno.exibirLista();
-
-        System.out.println("\nAna tem " + listaAna.contarItens() + " item(ns) salvo(s).");
-        System.out.println("Bruno tem " + listaBruno.contarItens() + " item(ns) salvo(s).");
-
-        // ===== Testes de estado inválido (Atividade 8) =====
-        System.out.println("\n===== Testes de validação =====");
-
+        System.out.println("\n===== Testes de validação (construtores) =====");
         try {
-            Filme filmeInvalido = new Filme("", -10, "Terror", "18 anos");
+            new Filme("", -10, "Terror", "18 anos");
         } catch (IllegalArgumentException e) {
             System.out.println("Falha esperada ao criar Filme: " + e.getMessage());
         }
-
         try {
-            Usuario usuarioInvalido = new Usuario("Carla", "Plano Inexistente");
+            new Usuario("Carla", "Plano Inexistente");
         } catch (IllegalArgumentException e) {
             System.out.println("Falha esperada ao criar Usuario: " + e.getMessage());
         }
 
-        // Comparando método de negócio x setter genérico
-        System.out.println("\n--- Método de negócio protegendo o objeto ---");
-        usuario1.fazerUpgradeDePlano("Plano Vip Fake"); // recusado, com aviso
-        usuario1.fazerUpgradeDePlano("Padrão");         // aceito, plano válido
+        // ===== Etapa 3: herança, sobrecarga e polimorfismo =====
+        Serie serie1 = new Serie("Mistérios do Norte", 3, 24, "Suspense", "16 anos");
+        Serie serie2 = new Serie("Risadas em Série", 1, 10, "Comédia", "Livre");
+        serie2.retirarDoCatalogo(); // serie2 passa a ser indisponível
 
-        // ===== Polimorfismo (Atividade 9) =====
-        // Referências do tipo da SUPERCLASSE (Midia) apontando para
-        // objetos de subclasses diferentes (Filme e Serie).
-        System.out.println("\n===== Polimorfismo =====");
+        System.out.println("\n===== Polimorfismo (Midia aponta para Filme e Serie) =====");
         Midia midiaA = filme1;
         Midia midiaB = serie1;
-
-        // Mesma chamada de método (exibirFicha), comportamento diferente,
-        // dependendo do tipo REAL do objeto por trás da referência Midia.
         midiaA.exibirFicha();
         System.out.println();
         midiaB.exibirFicha();
 
-        // ===== Sobrecarga (Atividade 5) =====
-        // Mesmo nome de método, exibirResumo(), duas assinaturas diferentes.
         System.out.println("\n===== Sobrecarga: exibirResumo() =====");
-        filme1.exibirResumo();          // versão sem parâmetros: resumo curto
+        filme1.exibirResumo();
+        filme1.exibirResumo(true);
+
+        // ===== Etapa 4: interface + exceção personalizada (throw / throws / catch) =====
+        System.out.println("\n===== Interface Reproduzivel + exceção =====");
+        Reproduzivel r1 = filme1; // cenário válido
+        Reproduzivel r2 = serie1; // cenário válido
+        Reproduzivel r3 = filme2; // cenário inválido (indisponível)
+        try {
+            r1.reproduzir();
+            r2.reproduzir();
+            r3.reproduzir(); // lança ConteudoIndisponivelException
+            System.out.println("Esta linha não é executada.");
+        } catch (ConteudoIndisponivelException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+
+        System.out.println("\n===== Usuario.assistirFilme (throws) + histórico em List =====");
+        try {
+            usuario1.assistirFilme(filme1);
+            usuario1.assistirFilme(filme1); // reassistir: a List aceita repetição
+            usuario2.assistirFilme(filme2); // lança: consumo do Bruno NÃO é alterado
+        } catch (ConteudoIndisponivelException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+        usuario1.exibirHistorico();
+        usuario2.exibirResumoDeConsumo();
+
+        // ===== Etapa 4: Catalogo com Map e Set =====
+        System.out.println("\n===== Catalogo: Map (busca por id) + Set (título único) =====");
+        Catalogo catalogo = new Catalogo();
+        int idFilme = catalogo.cadastrar(filme1);
+        int idSerie = catalogo.cadastrar(serie1);
+        catalogo.cadastrar(filme2);
+        catalogo.listar();
+
+        try {
+            catalogo.cadastrar(new Filme("cidade das estrelas", 100, "Drama", "12 anos"));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Cadastro recusado (Set): " + e.getMessage());
+        }
+
+        try {
+            System.out.print("Busca por id " + idSerie + ": ");
+            catalogo.buscarPorId(idSerie).exibirResumo();
+            catalogo.buscarPorId(99); // id inexistente
+        } catch (ConteudoIndisponivelException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+
+        try {
+            catalogo.remover(idFilme); // remove do Map e do Set
+            System.out.println("Removido o id " + idFilme + ". Restam " + catalogo.contarItens() + " conteúdo(s).");
+            catalogo.cadastrar(new Filme("Cidade das Estrelas", 100, "Drama", "12 anos")); // agora o título está livre
+            System.out.println("Título liberado no Set e cadastrado de novo.");
+        } catch (ConteudoIndisponivelException | IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+
+        // ===== Etapa 4: ListaPessoal com Set + Iterator =====
+        System.out.println("\n===== ListaPessoal: Set (sem repetição) + Iterator (remoção segura) =====");
+        ListaPessoal listaAna = new ListaPessoal("Ana");
+        listaAna.adicionarItem(filme1);
+        listaAna.adicionarItem(serie1);
+        listaAna.adicionarItem(serie1); // repetido: o Set recusa
+        listaAna.adicionarItem(serie2); // está indisponível
+        listaAna.exibirLista();
+
         System.out.println();
-        filme1.exibirResumo(true);      // versão com parâmetro: ficha completa
+        listaAna.removerIndisponiveis(); // Iterator.remove()
+        listaAna.exibirLista();
     }
 }

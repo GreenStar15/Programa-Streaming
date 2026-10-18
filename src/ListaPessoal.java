@@ -1,45 +1,56 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Representa a lista pessoal (favoritos / "assistir mais tarde") de um usuário.
- * Responsabilidade: guardar quais mídias (filmes ou séries) o usuário salvou,
- * separado do histórico de consumo (que fica em Usuario/SessaoDeReproducao).
+ * Responsabilidade: guardar quais mídias (filmes ou séries) o usuário salvou.
  *
- * Decisão de modelagem (Etapa 3): na Etapa 2, guardávamos filmes e séries em
- * duas listas separadas (List<Filme> e List<Serie>), porque as duas classes
- * não tinham nenhuma superclasse em comum. Agora que Filme e Serie são
- * ambas Midia, unificamos numa única List<Midia> — isso é exatamente o
- * tipo de duplicação que a herança existe para eliminar. Um Filme "é uma"
- * Midia, então pode entrar na mesma lista sem nenhum truque.
+ * Decisão de modelagem (Etapa 4): a lista era uma List<Midia> e usava
+ * contains() para evitar repetição. Mas "não repetir" é exatamente o que um
+ * Set garante sozinho. Usamos LinkedHashSet para manter também a ordem em que
+ * o usuário foi salvando os itens.
  */
 public class ListaPessoal {
 
     private String nomeDoUsuario;
-    private List<Midia> itensSalvos;
+    private Set<Midia> itensSalvos;
 
     public ListaPessoal(String nomeDoUsuario) {
         if (nomeDoUsuario == null || nomeDoUsuario.isBlank()) {
             throw new IllegalArgumentException("Nome do usuário não pode ser vazio.");
         }
         this.nomeDoUsuario = nomeDoUsuario;
-        this.itensSalvos = new ArrayList<>();
+        this.itensSalvos = new LinkedHashSet<>();
     }
 
-    // Um único método, graças ao polimorfismo: aceita tanto um Filme
-    // quanto uma Serie, porque os dois "são" Midia.
+    // Set.add() devolve false se o item já estava na lista.
     public void adicionarItem(Midia item) {
-        if (itensSalvos.contains(item)) {
+        if (!itensSalvos.add(item)) {
             System.out.println(item.getTitulo() + " já está na lista de " + nomeDoUsuario + ".");
             return;
         }
-        itensSalvos.add(item);
         System.out.println(item.getTitulo() + " adicionado à lista de " + nomeDoUsuario + ".");
     }
 
     public void removerItem(Midia item) {
         if (itensSalvos.remove(item)) {
             System.out.println(item.getTitulo() + " removido da lista de " + nomeDoUsuario + ".");
+        }
+    }
+
+    // Iterator explícito: precisamos REMOVER elementos enquanto percorremos.
+    // Fazer itensSalvos.remove(...) dentro de um for-each lançaria
+    // ConcurrentModificationException; it.remove() é o jeito seguro.
+    public void removerIndisponiveis() {
+        Iterator<Midia> it = itensSalvos.iterator();
+        while (it.hasNext()) {
+            Midia item = it.next();
+            if (!item.estaDisponivel()) {
+                it.remove();
+                System.out.println(item.getTitulo() + " saiu do catálogo e foi removido da lista de "
+                        + nomeDoUsuario + ".");
+            }
         }
     }
 

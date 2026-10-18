@@ -9,8 +9,12 @@
  * disponivel, exibirFicha(), estaDisponivel(), retirarDoCatalogo()). A frase
  * "Filme é uma Midia" e "Serie é uma Midia" faz sentido no domínio — por
  * isso migramos esse conteúdo comum para cá, em vez de deixar duplicado.
+ *
+ * Decisão de modelagem (Etapa 4): Midia agora é ABSTRATA. Uma "mídia"
+ * genérica não existe no catálogo: todo conteúdo é um filme ou uma série.
+ * Por isso não faz sentido criar new Midia(...) diretamente.
  */
-public class Midia {
+public abstract class Midia {
 
     private String titulo;
     private String genero;
@@ -33,10 +37,15 @@ public class Midia {
         this.disponivel = true; // por padrão, toda mídia cadastrada entra disponível
     }
 
+    // Método abstrato: cada subclasse diz qual é o seu tipo. Midia não tem
+    // como saber isso sozinha, então obriga as subclasses a implementarem.
+    public abstract String getTipo();
+
     // Comportamento comum: imprime os dados básicos de qualquer mídia.
     // As subclasses sobrescrevem isso (@Override) para acrescentar seus
     // próprios dados específicos (duração, temporadas, etc).
     public void exibirFicha() {
+        System.out.println("Tipo: " + getTipo());
         System.out.println("Título: " + titulo);
         System.out.println("Gênero: " + genero);
         System.out.println("Classificação: " + classificacaoIndicativa);
@@ -48,7 +57,7 @@ public class Midia {
     // (lista de resultados de busca) queremos só o título; outras vezes
     // (tela de detalhes) queremos o resumo completo.
     public void exibirResumo() {
-        System.out.println(titulo + " (" + genero + ")");
+        System.out.println("[" + getTipo() + "] " + titulo + " (" + genero + ")");
     }
 
     public void exibirResumo(boolean detalhado) {

@@ -6,7 +6,7 @@
  *
  * "Serie é uma Midia" faz sentido no domínio, pelo mesmo motivo de Filme.
  */
-public class Serie extends Midia {
+public class Serie extends Midia implements Reproduzivel {
 
     private int numeroTemporadas;
     private int totalEpisodios;
@@ -34,10 +34,9 @@ public class Serie extends Midia {
     // Comportamento que só Serie tem: acompanhar progresso episódio a episódio.
     // Antes da Etapa 3, Serie não tinha reincluirNoCatalogo() — agora ganha
     // esse método de graça, herdado de Midia.
-    public void assistirEpisodio() {
+    public void assistirEpisodio() throws ConteudoIndisponivelException {
         if (!estaDisponivel()) {
-            System.out.println(getTitulo() + " não está disponível no momento.");
-            return;
+            throw new ConteudoIndisponivelException(getTitulo() + " não está disponível no catálogo.");
         }
         if (episodiosAssistidos >= totalEpisodios) {
             System.out.println("Você já assistiu a todos os episódios de " + getTitulo() + ".");
@@ -48,6 +47,19 @@ public class Serie extends Midia {
         if (episodiosAssistidos == totalEpisodios) {
             System.out.println(getTitulo() + " concluída!");
         }
+    }
+
+    // Implementa o método abstrato de Midia.
+    @Override
+    public String getTipo() {
+        return "Série";
+    }
+
+    // Implementa o contrato da interface Reproduzivel: para uma série,
+    // "reproduzir" significa assistir ao próximo episódio.
+    @Override
+    public void reproduzir() throws ConteudoIndisponivelException {
+        assistirEpisodio();
     }
 
     public int getEpisodiosAssistidos() {
