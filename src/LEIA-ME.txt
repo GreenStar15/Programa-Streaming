@@ -1,0 +1,37 @@
+=========================================================
+            Sistema de VOD do Grupo 4 - ADS2
+=========================================================
+
+COMO EXECUTAR
+
+  1. Extraia esta pasta COMPLETA para qualquer lugar
+     do computador (ex: Área de Trabalho).
+
+  2. Dê DUPLO CLIQUE no arquivo "Executar ADS2.bat".
+
+  3. O menu aparecerá no terminal. Siga as instruções.
+
+REQUISITO
+  - Ter o Java instalado (JDK ou JRE 17 ou superior).
+  - Verifique abrindo o Prompt de Comando e digitando:
+        java -version
+    Se aparecer a versão, está pronto.
+
+ALTERNATIVA (linha de comando)
+  Abra o terminal na pasta e execute:
+        java -jar ADS2.jar
+
+PROBLEMAS COMUNS
+
+  - "Java nao e reconhecido": o Java nao esta no PATH.
+    Reinstale o JDK e marque "Add to PATH" no instalador.
+
+  - A janela abre e fecha rapido: execute pelo .bat
+    (o .bat mantém a janela aberta).
+
+  - Duplo clique no .jar abre como zip: use o .bat.
+
+INTEGRANTES
+  Gabriel, Henrique, Joao Lara, Natacha, Yoran e Danilo
+
+=========================================================
